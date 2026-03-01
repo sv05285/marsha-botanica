@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Marsha Botanica — Coming Soon</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500;1,600&family=Cinzel:wght@400;500&family=DM+Mono:wght@300;400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet"/>
+
+<script>
+const SITE = {
+  pageTitle:           "Marsha Botanica — Coming Soon",
+  announcementBar:     true,
+  announcementText:    "The Nūr Collection — Coming Soon",
+  shopLive:            false,
+  shopUrl:             "https://marshbotanica.myshopify.com",
+  heroShopButton:      false,
+  showStory:           true,
+  showKits:            true,
+  showEmailCapture:    true,
+  showKitPrices:       false,
+  showAddToCart:       false,
+  kitPrices:           { renewal: "$68", seaglow: "$68", goodlook: "$68" },
+  kitShopUrls:         { renewal: "#", seaglow: "#", goodlook: "#" },
+  supabaseUrl:         "https://ixvvidyjyajejjfaaajd.supabase.co",
+  supabaseAnonKey:     "YOUR_SUPABASE_ANON_KEY",
+};
+</script>
+
+<style>
+:root {
+  /* Mediterranean palette */
+  --sun:       #f5ede0;   /* warm parchment */
+  --linen:     #fdf8f0;   /* lightest ivory */
+  --terracotta:#e8c99a;   /* warm sand */
+  --forest:    #1a3d28;   /* deep olive grove */
+  --sage:      #4a7c59;   /* sage green */
+  --cobalt:    #1b3870;   /* Mediterranean sea */
+  --teal:      #1e6068;   /* sea glass */
+  --gold:      #c9a520;   /* orange blossom gold */
+  --gold-lt:   #e8d080;   /* champagne */
+  --amber:     #d4762a;   /* citrus */
+
+  /* Kit colors */
+  --renewal-bg:  #fdf4e4;
+  --renewal-acc: #c9a520;
+  --renewal-ink: #3d2a08;
+
+  --seaglow-bg:  #e8f4f4;
+  --seaglow-acc: #1e6068;
+  --seaglow-ink: #0d2e30;
+
+  --goodlook-bg: #eef4ec;
+  --goodlook-acc:#2d5c38;
+  --goodlook-ink:#162b1c;
+
+  --text:   #1c180f;
+  --text-2: #3d3524;
+  --text-3: #7a6e52;
+  --border: #ddd0b4;
+}
+
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--linen);color:var(--text);font-family:'EB Garamond',serif;overflow-x:hidden;}
+
+/* ── ANNOUNCEMENT ── */
+#ann-bar{
+  background:var(--forest);
+  text-align:center;padding:9px 24px;
+  font-family:'DM Mono',monospace;font-size:0.53rem;
+  letter-spacing:0.3em;text-transform:uppercase;color:var(--gold-lt);
+}
+
+/* ── NAV ── */
+nav{
+  position:sticky;top:0;z-index:100;
+  padding:14px 48px;
+  display:flex;align-items:center;justify-content:space-between;
+  background:rgba(253,248,240,0.96);backdrop-filter:blur(16px);
+  border-bottom:1px solid rgba(220,208,180,0.5);
+}
+.nav-logo{height:52px;width:auto;display:block;}
+.nav-right{display:flex;align-items:center;gap:28px;}
+.nav-link{
+  font-family:'DM Mono',monospace;font-size:0.53rem;
+  letter-spacing:0.22em;text-transform:uppercase;
+  color:var(--text-3);text-decoration:none;transition:color 0.2s;
+}
+.nav-link:hover{color:var(--forest);}
+.nav-cta{
+  font-family:'DM Mono',monospace;font-size:0.53rem;
+  letter-spacing:0.18em;text-transform:uppercase;
+  background:var(--forest);color:var(--gold-lt);
+  border:none;padding:10px 22px;border-radius:2px;
+  cursor:pointer;text-decoration:none;transition:background 0.2s;
+}
+.nav-cta:hover{background:#254d34;}
+
+/* ── HERO ── */
+.hero{
+  min-height:100vh;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  padding:80px 24px 80px;
+  position:relative;overflow:hidden;
+  background:
+    radial-gradient(ellipse 120% 60% at 50% -5%, rgba(201,165,32,0.08) 0%, transparent 55%),
+    radial-gradient(ellipse 50% 40% at 5% 70%, rgba(26,61,40,0.06) 0%, transparent 50%),
+    radial-gradient(ellipse 50% 40% at 95% 30%, rgba(30,96,104,0.06) 0%, transparent 50%),
+    linear-gradient(180deg, #fdf8f0 0%, #f8efe0 60%, #f2e6d0 100%);
+}
+
+/* sun burst watercolor wash */
+.hero-wash{
+  position:absolute;inset:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse 55% 45% at 72% 18%, rgba(232,192,90,0.12) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 35% at 15% 85%, rgba(26,61,40,0.06) 0%, transparent 50%);
+}
+
+/* floating botanical dots */
+.hero-dots{position:absolute;inset:0;pointer-events:none;}
+.hero-dots span{
+  position:absolute;border-radius:50%;
+  background:var(--gold);opacity:0.12;
+}
+
+.hero-inner{
+  position:relative;z-index:2;
+  display:flex;flex-direction:column;
+  align-items:center;max-width:760px;width:100%;text-align:center;
+}
+
+/* Logo image in hero */
+.hero-logo{
+  width:min(420px, 85vw);
+  height:auto;
+  margin-bottom:32px;
+  /* The logo has a white/light bg — blend it into the hero */
+  mix-blend-mode:multiply;
+  filter:contrast(1.05);
+}
+
+.eyebrow{
+  font-family:'DM Mono',monospace;font-size:0.54rem;
+  letter-spacing:0.36em;color:var(--gold);
+  text-transform:uppercase;margin-bottom:16px;
+}
+
+.rule{
+  width:100%;max-width:420px;
+  display:flex;align-items:center;gap:12px;
+  margin:0 auto 28px;
+}
+.rule-line{flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--terracotta),transparent);}
+.rule-gem{width:4px;height:4px;background:var(--gold);transform:rotate(45deg);flex-shrink:0;}
+.rule-txt{font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.28em;color:var(--gold);text-transform:uppercase;white-space:nowrap;}
+
+.hero-tagline{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(1.4rem,3.2vw,2.1rem);
+  font-weight:400;font-style:italic;
+  color:var(--text-2);line-height:1.45;
+  max-width:520px;margin-bottom:14px;
+}
+.hero-desc{
+  font-size:1.08rem;color:var(--text-3);
+  line-height:1.85;max-width:460px;margin-bottom:46px;
+}
+
+/* email form */
+.form-wrap{width:100%;max-width:480px;margin-bottom:12px;}
+.form-row{
+  display:flex;border:1.5px solid var(--border);border-radius:3px;
+  overflow:hidden;background:white;
+  box-shadow:0 8px 32px rgba(26,61,40,0.08),0 1px 4px rgba(0,0,0,0.04);
+}
+.form-input{
+  flex:1;border:none;outline:none;padding:16px 20px;
+  font-family:'EB Garamond',serif;font-size:1.05rem;
+  color:var(--text);background:transparent;
+}
+.form-input::placeholder{color:var(--text-3);font-style:italic;}
+.form-btn{
+  background:var(--forest);border:none;padding:16px 26px;
+  font-family:'DM Mono',monospace;font-size:0.54rem;
+  letter-spacing:0.16em;text-transform:uppercase;
+  color:var(--gold-lt);cursor:pointer;transition:background 0.2s;white-space:nowrap;
+}
+.form-btn:hover{background:#254d34;}
+.form-note{font-size:0.72rem;color:var(--text-3);font-style:italic;text-align:center;margin-top:10px;}
+.form-success{
+  display:none;padding:18px;border-radius:3px;text-align:center;
+  border:1px solid rgba(26,61,40,0.15);background:rgba(26,61,40,0.04);
+}
+.form-success p{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-style:italic;color:var(--forest);}
+
+.hero-scroll{
+  position:absolute;bottom:24px;left:50%;transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+  opacity:0.35;animation:bob 3s ease-in-out infinite;
+}
+.hero-scroll span{font-family:'DM Mono',monospace;font-size:0.44rem;letter-spacing:0.22em;color:var(--text-3);text-transform:uppercase;}
+.scroll-line{width:1px;height:26px;background:linear-gradient(var(--gold),transparent);}
+@keyframes bob{0%,100%{transform:translateX(-50%) translateY(0);}50%{transform:translateX(-50%) translateY(6px);}}
+
+/* ── SHARED LAYOUT ── */
+.wrap{max-width:1100px;margin:0 auto;padding:100px 48px;}
+.sec-head{text-align:center;margin-bottom:64px;}
+.sec-head .eyebrow{margin-bottom:12px;}
+.sec-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(2.1rem,5vw,3.4rem);
+  font-weight:300;color:var(--forest);line-height:1.08;
+}
+.sec-title em{font-style:italic;}
+.sec-body{font-size:1.05rem;color:var(--text-3);line-height:1.85;max-width:520px;margin:14px auto 0;}
+
+/* ── STORY ── */
+.story-section{
+  background:linear-gradient(180deg,#f8efe0 0%,#f2e6d2 100%);
+  position:relative;
+}
+.story-section::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--terracotta),transparent);
+}
+.story-grid{display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:center;}
+.story-copy{display:flex;flex-direction:column;gap:22px;}
+.story-pull{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(1.3rem,2.5vw,1.7rem);
+  font-weight:400;font-style:italic;color:var(--forest);line-height:1.48;
+  border-left:2px solid var(--gold);padding-left:22px;
+}
+.story-p{font-size:1rem;color:var(--text-2);line-height:1.92;}
+.story-p strong{color:var(--forest);font-weight:500;}
+.story-img-wrap{position:relative;}
+.story-img-frame{
+  border-radius:4px;overflow:hidden;
+  border:1px solid rgba(220,200,160,0.5);
+  box-shadow:0 16px 60px rgba(26,61,40,0.1),0 3px 12px rgba(0,0,0,0.06);
+}
+.story-img-frame img{width:100%;height:460px;object-fit:cover;object-position:center top;display:block;}
+.story-img-cap{
+  font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.18em;
+  color:var(--text-3);text-transform:uppercase;text-align:right;margin-top:10px;
+}
+.story-img-wrap::before{
+  content:'';position:absolute;top:-10px;right:-10px;
+  width:52px;height:52px;
+  border-top:1.5px solid var(--gold);border-right:1.5px solid var(--gold);
+  pointer-events:none;opacity:0.5;
+}
+.story-img-wrap::after{
+  content:'';position:absolute;bottom:-10px;left:-10px;
+  width:52px;height:52px;
+  border-bottom:1.5px solid var(--gold);border-left:1.5px solid var(--gold);
+  pointer-events:none;opacity:0.5;
+}
+
+.pillars{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--border);margin-top:64px;}
+.pillar{padding:34px 28px;border-right:1px solid var(--border);background:rgba(253,248,240,0.7);transition:background 0.2s;}
+.pillar:last-child{border-right:none;}
+.pillar:hover{background:rgba(26,61,40,0.03);}
+.p-num{font-family:'Cormorant Garamond',serif;font-size:2.8rem;font-weight:300;color:rgba(201,165,32,0.3);line-height:1;margin-bottom:12px;}
+.p-title{font-family:'Cormorant Garamond',serif;font-size:1.12rem;font-weight:500;color:var(--forest);margin-bottom:8px;}
+.p-text{font-size:0.9rem;color:var(--text-3);line-height:1.75;}
+
+/* ══════════════════════════════════════════
+   KITS — each one its own world
+══════════════════════════════════════════ */
+.kits-section{position:relative;}
+
+/* ── Kit 1 — RENEWAL (warm gold, floral ivory) ── */
+.kit-renewal{
+  background:linear-gradient(135deg, var(--renewal-bg) 0%, #fef6e8 50%, #fdf0d8 100%);
+  position:relative;overflow:hidden;
+}
+.kit-renewal::before{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse 60% 50% at 90% 10%, rgba(201,165,32,0.12) 0%, transparent 55%),
+    radial-gradient(ellipse 40% 40% at 5% 90%, rgba(212,118,42,0.08) 0%, transparent 50%);
+}
+
+/* ── Kit 2 — GOODLOOK (earthy green, clay) ── */
+.kit-goodlook{
+  background:linear-gradient(135deg, var(--goodlook-bg) 0%, #e8f2e8 50%, #deeede 100%);
+  position:relative;overflow:hidden;
+}
+.kit-goodlook::before{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse 55% 45% at 10% 15%, rgba(45,92,56,0.1) 0%, transparent 55%),
+    radial-gradient(ellipse 40% 35% at 88% 85%, rgba(26,61,40,0.08) 0%, transparent 50%);
+}
+
+/* ── Kit 3 — SEAGLOW (teal, sea glass) ── */
+.kit-seaglow{
+  background:linear-gradient(135deg, var(--seaglow-bg) 0%, #ddf0f2 50%, #cce8ec 100%);
+  position:relative;overflow:hidden;
+}
+.kit-seaglow::before{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse 60% 50% at 85% 10%, rgba(30,96,104,0.12) 0%, transparent 55%),
+    radial-gradient(ellipse 40% 35% at 10% 85%, rgba(27,56,112,0.07) 0%, transparent 50%);
+}
+
+/* Kit layout */
+.kit-inner{
+  max-width:1100px;margin:0 auto;
+  padding:100px 48px;
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:80px;align-items:center;
+  position:relative;z-index:1;
+}
+.kit-inner.reverse{direction:rtl;}
+.kit-inner.reverse > *{direction:ltr;}
+
+.kit-copy{display:flex;flex-direction:column;gap:20px;}
+
+.kit-num{
+  font-family:'DM Mono',monospace;font-size:0.5rem;
+  letter-spacing:0.3em;text-transform:uppercase;
+  display:inline-block;padding:5px 12px;border-radius:20px;
+  align-self:flex-start;
+}
+.kit-renewal .kit-num{background:rgba(201,165,32,0.12);color:#8a6a00;border:1px solid rgba(201,165,32,0.25);}
+.kit-goodlook .kit-num{background:rgba(45,92,56,0.1);color:#1a4024;border:1px solid rgba(45,92,56,0.2);}
+.kit-seaglow .kit-num{background:rgba(30,96,104,0.1);color:#0d3a40;border:1px solid rgba(30,96,104,0.2);}
+
+.kit-name{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(2.6rem,6vw,4.2rem);
+  font-weight:300;font-style:italic;line-height:0.9;
+}
+.kit-renewal .kit-name{color:var(--renewal-ink);}
+.kit-goodlook .kit-name{color:var(--goodlook-ink);}
+.kit-seaglow .kit-name{color:var(--seaglow-ink);}
+
+.kit-tagline{
+  font-size:1.05rem;line-height:1.75;
+}
+.kit-renewal .kit-tagline{color:rgba(61,42,8,0.65);}
+.kit-goodlook .kit-tagline{color:rgba(22,43,28,0.65);}
+.kit-seaglow .kit-tagline{color:rgba(13,46,48,0.65);}
+
+/* Kit accent rule */
+.kit-rule{
+  width:48px;height:2px;
+  margin:4px 0;
+  border-radius:2px;
+}
+.kit-renewal .kit-rule{background:var(--renewal-acc);}
+.kit-goodlook .kit-rule{background:var(--goodlook-acc);}
+.kit-seaglow .kit-rule{background:var(--seaglow-acc);}
+
+/* Products list */
+.kit-products{display:flex;flex-direction:column;gap:0;margin-top:6px;}
+.kit-product{
+  display:flex;align-items:flex-start;gap:14px;
+  padding:13px 0;
+}
+.kit-product+.kit-product{border-top:1px solid rgba(0,0,0,0.06);}
+.kp-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;margin-top:8px;}
+.kit-renewal  .kp-dot{background:var(--renewal-acc);}
+.kit-goodlook .kp-dot{background:var(--goodlook-acc);}
+.kit-seaglow  .kp-dot{background:var(--seaglow-acc);}
+.kp-name{font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-weight:500;}
+.kit-renewal  .kp-name{color:var(--renewal-ink);}
+.kit-goodlook .kp-name{color:var(--goodlook-ink);}
+.kit-seaglow  .kp-name{color:var(--seaglow-ink);}
+.kp-type{font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.14em;text-transform:uppercase;margin-top:2px;opacity:0.5;}
+
+/* Kit photo */
+.kit-photo-wrap{position:relative;}
+.kit-photo-frame{
+  border-radius:4px;overflow:hidden;
+  box-shadow:0 20px 60px rgba(0,0,0,0.1),0 4px 16px rgba(0,0,0,0.06);
+}
+.kit-photo-frame img{
+  width:100%;height:480px;
+  object-fit:cover;object-position:center 20%;
+  display:block;transition:transform 0.5s ease;
+}
+.kit-photo-wrap:hover .kit-photo-frame img{transform:scale(1.03);}
+
+/* corner accents on photos */
+.kit-photo-wrap::before,.kit-photo-wrap::after{
+  content:'';position:absolute;width:44px;height:44px;pointer-events:none;
+}
+.kit-renewal .kit-photo-wrap::before{top:-8px;right:-8px;border-top:1.5px solid var(--renewal-acc);border-right:1.5px solid var(--renewal-acc);opacity:0.5;}
+.kit-renewal .kit-photo-wrap::after{bottom:-8px;left:-8px;border-bottom:1.5px solid var(--renewal-acc);border-left:1.5px solid var(--renewal-acc);opacity:0.5;}
+.kit-goodlook .kit-photo-wrap::before{top:-8px;right:-8px;border-top:1.5px solid var(--goodlook-acc);border-right:1.5px solid var(--goodlook-acc);opacity:0.5;}
+.kit-goodlook .kit-photo-wrap::after{bottom:-8px;left:-8px;border-bottom:1.5px solid var(--goodlook-acc);border-left:1.5px solid var(--goodlook-acc);opacity:0.5;}
+.kit-seaglow .kit-photo-wrap::before{top:-8px;right:-8px;border-top:1.5px solid var(--seaglow-acc);border-right:1.5px solid var(--seaglow-acc);opacity:0.5;}
+.kit-seaglow .kit-photo-wrap::after{bottom:-8px;left:-8px;border-bottom:1.5px solid var(--seaglow-acc);border-left:1.5px solid var(--seaglow-acc);opacity:0.5;}
+
+/* kit dividers */
+.kit-divider{
+  height:1px;
+  background:linear-gradient(90deg,transparent,rgba(0,0,0,0.08),transparent);
+}
+
+/* ── NOTIFY ── */
+.notify-section{
+  background:var(--forest);
+  text-align:center;position:relative;overflow:hidden;
+}
+.notify-section::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 100% 80% at 50% 50%,rgba(201,165,32,0.08) 0%,transparent 70%);
+}
+.notify-inner{max-width:560px;margin:0 auto;padding:100px 24px;position:relative;z-index:1;}
+.notify-section .sec-title{color:var(--sun);}
+.notify-section .sec-body{color:rgba(245,237,224,0.58);margin-bottom:40px;}
+.notify-section .eyebrow{color:var(--gold-lt);margin-bottom:14px;}
+.notify-form .form-row{border-color:rgba(255,255,255,0.12);background:rgba(255,255,255,0.05);}
+.notify-form .form-input{color:var(--sun);}
+.notify-form .form-input::placeholder{color:rgba(245,237,224,0.32);}
+.notify-form .form-btn{background:var(--gold);color:var(--forest);}
+.notify-form .form-btn:hover{background:#b8912a;}
+.notify-form .form-note{color:rgba(245,237,224,0.28);margin-top:12px;}
+.notify-form .form-success{border-color:rgba(201,165,32,0.3);background:rgba(201,165,32,0.08);}
+.notify-form .form-success p{color:var(--gold-lt);}
+
+/* Logo in notify section (dark bg — use full logo without blend) */
+.notify-logo{
+  width:200px;height:auto;margin:0 auto 32px;display:block;
+  filter:brightness(0) invert(1) sepia(1) saturate(0.6) brightness(1.4);
+  opacity:0.85;
+}
+
+/* ── FOOTER ── */
+footer{background:#0c1a10;padding:48px 40px;}
+.footer-inner{
+  max-width:1100px;margin:0 auto;
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:20px;
+}
+.footer-logo{height:36px;width:auto;filter:brightness(0) invert(1) sepia(1) saturate(0.4) brightness(1.1);opacity:0.4;}
+.footer-links{display:flex;gap:22px;flex-wrap:wrap;}
+.footer-links a{
+  font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.18em;
+  text-transform:uppercase;color:rgba(245,237,224,0.22);text-decoration:none;transition:color 0.2s;
+}
+.footer-links a:hover{color:var(--gold-lt);}
+.footer-copy{font-family:'DM Mono',monospace;font-size:0.48rem;color:rgba(245,237,224,0.16);letter-spacing:0.1em;}
+
+/* ── ANIMATIONS ── */
+.reveal{opacity:0;transform:translateY(22px);transition:opacity 0.78s ease,transform 0.78s ease;}
+.reveal.in{opacity:1;transform:translateY(0);}
+.reveal.d1{transition-delay:0.1s;}.reveal.d2{transition-delay:0.2s;}
+.reveal.d3{transition-delay:0.32s;}.reveal.d4{transition-delay:0.44s;}
+
+/* ── RESPONSIVE ── */
+@media(max-width:860px){
+  nav{padding:12px 20px;}
+  .nav-logo{height:40px;}
+  .wrap,.kit-inner{padding:68px 20px;gap:44px;}
+  .story-grid,.kit-inner{grid-template-columns:1fr;}
+  .story-img-wrap{display:none;}
+  .kit-inner.reverse{direction:ltr;}
+  .pillars{grid-template-columns:1fr;}
+  .pillar{border-right:none;border-bottom:1px solid var(--border);}
+  .pillar:last-child{border-bottom:none;}
+  .kit-photo-frame img{height:320px;}
+  .footer-inner{flex-direction:column;align-items:flex-start;}
+}
+</style>
+</head>
+<body>
+
+<!-- ══ ANNOUNCEMENT ══ -->
+<div id="ann-bar"></div>
+
+<!-- ══ NAV ══ -->
+<nav>
+  <a href="#">
+    <img src="logo.png" alt="Marsha Botanica" class="nav-logo"/>
+  </a>
+  <div class="nav-right" id="nav-right"></div>
+</nav>
+
+<!-- ══ HERO ══ -->
+<section class="hero">
+  <div class="hero-wash"></div>
+
+  <!-- floating botanical specks -->
+  <div class="hero-dots">
+    <span style="width:3px;height:3px;top:18%;left:12%;"></span>
+    <span style="width:4px;height:4px;top:72%;left:8%;opacity:0.08;"></span>
+    <span style="width:3px;height:3px;top:25%;right:10%;"></span>
+    <span style="width:5px;height:5px;top:60%;right:15%;opacity:0.07;background:var(--sage);"></span>
+    <span style="width:2px;height:2px;top:82%;right:28%;opacity:0.1;"></span>
+  </div>
+
+  <div class="hero-inner">
+
+    <!-- Real logo as hero centerpiece -->
+    <img src="logo.png" alt="Marsha Botanica" class="hero-logo reveal"/>
+
+    <div class="rule reveal d1">
+      <div class="rule-line"></div>
+      <div class="rule-gem"></div>
+      <span class="rule-txt" id="hero-badge">Coming Soon</span>
+      <div class="rule-gem"></div>
+      <div class="rule-line"></div>
+    </div>
+
+    <p class="hero-tagline reveal d2">Quiet luxury you can see, feel, and repeat.</p>
+    <p class="hero-desc reveal d3">Three signature bars. Six precision treatments. One complete cleansing system — crafted from the botanical world for modern skin.</p>
+
+    <div id="hero-cta" class="reveal d4"></div>
+
+  </div>
+
+  <div class="hero-scroll">
+    <span>Discover</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- ══ STORY ══ -->
+<section class="story-section" id="story-section">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="eyebrow">The Philosophy</p>
+      <h2 class="sec-title">Born from the botanical world.<br><em>Built for modern skin.</em></h2>
+      <p class="sec-body">A precision cleansing system — not a collection of soaps. Every element is engineered, tested, and made to be repeated with exactness.</p>
+    </div>
+
+    <div class="story-grid">
+      <div class="story-copy reveal d1">
+        <p class="story-pull">"The system is built so scaling is replication, not reinvention."</p>
+        <p class="story-p">Marsha Botanica is a <strong>luxury-performance cleansing system</strong> — three signature bars paired with six targeted treatments, assembled into three curated kits for three distinct skin intentions.</p>
+        <p class="story-p">Every bar is prepared in small batches using a controlled process with premium botanical ingredients. Precise formulations. Documented by round.</p>
+        <p class="story-p">The brand world is Mediterranean and intentional — warm stone, orange blossom, salt air, sea mineral. The kind of luxury that doesn't announce itself.</p>
+      </div>
+      <div class="story-img-wrap reveal d2">
+        <div class="story-img-frame">
+          <img src="img-display-all.png" alt="The Nūr Collection"/>
+        </div>
+        <p class="story-img-cap">The Nūr Collection — Renewal · GoodLook · SeaGlow</p>
+      </div>
+    </div>
+
+    <div class="pillars reveal d1">
+      <div class="pillar">
+        <div class="p-num">01</div>
+        <div class="p-title">Performance Formulated</div>
+        <p class="p-text">Each bar is built around a proprietary blend of active ingredients — carefully selected, precisely dosed, and consistent across every batch.</p>
+      </div>
+      <div class="pillar">
+        <div class="p-num">02</div>
+        <div class="p-title">Botanical Infused</div>
+        <p class="p-text">Made with premium botanical ingredients in a controlled small-batch process. Quality-first from raw material to finished bar.</p>
+      </div>
+      <div class="pillar">
+        <div class="p-num">03</div>
+        <div class="p-title">System Built</div>
+        <p class="p-text">Three kits. Nine products. One architecture. Each component designed to work together as a complete, repeatable regimen.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ KITS ══ -->
+<section class="kits-section" id="kits-section">
+
+  <!-- ── RENEWAL ── warm gold, floral ivory -->
+  <div class="kit-renewal">
+    <div class="kit-inner">
+      <div class="kit-copy reveal">
+        <span class="kit-num">Kit 01</span>
+        <h2 class="kit-name">Renewal</h2>
+        <div class="kit-rule"></div>
+        <p class="kit-tagline">Revitalizing daily cleanse paired with restorative treatments. Floral-citrus elegance, face-first.</p>
+        <div class="kit-products">
+          <div class="kit-product">
+            <div class="kp-dot"></div>
+            <div><div class="kp-name">Neroli Bar — <em style="font-size:0.82em;opacity:0.7">Top Secret</em></div><div class="kp-type">Handcrafted · Coming Soon</div></div>
+          </div>
+          <div class="kit-product">
+            <div class="kp-dot"></div>
+            <div><div class="kp-name">Barrier Veil</div><div class="kp-type">Treatment · Protective</div></div>
+          </div>
+          <div class="kit-product">
+            <div class="kp-dot"></div>
+            <div><div class="kp-name">Elixir Layla</div><div class="kp-type">Treatment · Restorative</div></div>
+          </div>
+        </div>
+        <div id="commerce-renewal"></div>
+      </div>
+      <div class="kit-photo-wrap reveal d2">
+        <div class="kit-photo-frame">
+          <img src="img-renewal.png" alt="Renewal Kit"/>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="kit-divider"></div>
+
+  <!-- ── GOODLOOK ── earthy green, clay -->
+  <div class="kit-goodlook">
+    <div class="kit-inner reverse">
+      <div class="kit-copy reveal">
+        <span class="kit-num">Kit 02</span>
+        <h2 class="kit-name">GoodLook</h2>
+        <div class="kit-rule"></div>
+        <p class="kit-tagline">Purify · Balance · Restore. Clarifying mineral texture with a grounding, earthy intelligence.</p>
+        <div class="kit-products">
+          <div class="kit-product">
+            <div class="kp-dot"></div>
+            <div><div class="kp-name">Rhassoul Bar — <em style="font-size:0.82em;opacity:0.7">Top Secret</em></div><div class="kp-type">Handcrafted · Coming Soon</div></div>
+          </div>
+          <div class="kit-product">
+            <div class="kp-dot"></div>
+            <div><div class="kp-name">Calm Dew</div><div class="kp-type">Treatment · Clarifying</div></div>
+          </div>
+          <div class="kit-product">
+            <div class="kp-dot"></div>
+            <div><div class="kp-name">Canopy Complex</div><div class="kp-type">Treatment · Overnight Repair</div></div>
+          </div>
+        </div>
+        <div id="commerce-goodlook"></div>
+      </div>
+      <div class="kit-photo-wrap reveal d2">
+        <div class="kit-photo-frame">
+          <img src="img-goodlook.png" alt="GoodLook Kit"/>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="kit-divider"></div>
+
+  <!-- ── SEAGLOW ── teal, sea glass -->
+  <div class="kit-seaglow">
+    <div class="kit-inner">
+      <div class="kit-copy reveal">
+        <span class="kit-num">Kit 03</span>
+        <h2 class="kit-name">SeaGlow</h2>
+        <div class="kit-rule"></div>
+        <p class="kit-tagline">Polished mineral finish. Sea-mineral intelligence and quiet luminous radiance from the coastline.</p>
+        <div class="kit-products">
+          <div class="kit-product">
+            <div class="kp-dot"></div>
+            <div><div class="kp-name">Halo Bar — <em style="font-size:0.82em;opacity:0.7">Top Secret</em></div><div class="kp-type">Handcrafted · Coming Soon</div></div>
+          </div>
+          <div class="kit-product">
+            <div class="kp-dot"></div>
+            <div><div class="kp-name">Kelp Coat</div><div class="kp-type">Treatment · Protective</div></div>
+          </div>
+          <div class="kit-product">
+            <div class="kp-dot"></div>
+            <div><div class="kp-name">Essentia Azure</div><div class="kp-type">Treatment · Brightening</div></div>
+          </div>
+        </div>
+        <div id="commerce-seaglow"></div>
+      </div>
+      <div class="kit-photo-wrap reveal d2">
+        <div class="kit-photo-frame">
+          <img src="img-seaglow.png" alt="SeaGlow Kit"/>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- ══ NOTIFY ══ -->
+<section class="notify-section" id="notify-section">
+  <div class="notify-inner" id="notify-inner"></div>
+</section>
+
+<!-- ══ FOOTER ══ -->
+<footer>
+  <div class="footer-inner">
+    <img src="logo.png" alt="Marsha Botanica" class="footer-logo"/>
+    <div class="footer-links" id="footer-links"></div>
+    <p class="footer-copy">© 2026 Marsha Botanica. All rights reserved.</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  document.title = SITE.pageTitle;
+
+  // ANN BAR
+  const bar = document.getElementById('ann-bar');
+  bar.style.display = SITE.announcementBar ? 'block' : 'none';
+  if(SITE.announcementBar) bar.textContent = SITE.announcementText;
+
+  // HERO BADGE
+  document.getElementById('hero-badge').textContent = SITE.shopLive ? 'Now Available' : 'Coming Soon';
+
+  // NAV
+  let nav = '';
+  nav += `<a href="#story-section" class="nav-link">Our Story</a>`;
+  nav += `<a href="#kits-section" class="nav-link">The Collection</a>`;
+  nav += SITE.shopLive
+    ? `<a href="${SITE.shopUrl}" class="nav-cta">Shop Now</a>`
+    : `<a href="#notify-section" class="nav-cta">Join the List</a>`;
+  document.getElementById('nav-right').innerHTML = nav;
+
+  // HERO CTA
+  const heroCTA = document.getElementById('hero-cta');
+  if(SITE.shopLive && SITE.heroShopButton){
+    heroCTA.innerHTML = `<a href="${SITE.shopUrl}" style="display:inline-block;background:var(--forest);color:var(--gold-lt);font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;padding:18px 44px;border-radius:2px;text-decoration:none;">Shop the Collection</a>`;
+  } else if(SITE.showEmailCapture){
+    heroCTA.innerHTML = `
+      <div class="form-wrap">
+        <form class="form-row" id="hero-form" onsubmit="captureEmail(event,'hero-form','hero-ok')">
+          <input class="form-input" type="email" placeholder="Your email address" required/>
+          <button class="form-btn" type="submit">Notify Me</button>
+        </form>
+        <div class="form-success" id="hero-ok"><p>You're on the list. We'll be in touch.</p></div>
+        <p class="form-note">Be first to know when we launch.</p>
+      </div>`;
+  }
+
+  // KIT COMMERCE
+  ['renewal','seaglow','goodlook'].forEach(k => {
+    const el = document.getElementById(`commerce-${k}`);
+    if(!el) return;
+    let html = '';
+    if(SITE.showKitPrices) html += `<div style="font-family:'Cormorant Garamond',serif;font-size:1.5rem;margin-top:8px;">${SITE.kitPrices[k]}</div>`;
+    if(SITE.showAddToCart && SITE.shopLive) html += `<a href="${SITE.kitShopUrls[k]}" style="display:block;text-align:center;padding:14px;margin-top:10px;font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.18em;text-transform:uppercase;text-decoration:none;border-radius:2px;background:currentColor;">Add to Cart</a>`;
+    el.innerHTML = html;
+  });
+
+  // NOTIFY SECTION
+  const ni = document.getElementById('notify-inner');
+  if(SITE.shopLive){
+    ni.innerHTML = `
+      <img src="logo.png" alt="Marsha Botanica" class="notify-logo"/>
+      <p class="eyebrow reveal">The Nūr Collection</p>
+      <h2 class="sec-title reveal d1">The collection<br><em>is here.</em></h2>
+      <p class="sec-body reveal d2" style="margin-bottom:40px">Three signature bars. Six precision treatments. Three curated kits. Ready for you now.</p>
+      <a href="${SITE.shopUrl}" style="display:inline-block;background:var(--gold);color:var(--forest);font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;padding:18px 44px;border-radius:2px;text-decoration:none;" class="reveal d3">Shop the Collection</a>`;
+  } else {
+    ni.innerHTML = `
+      <img src="logo.png" alt="Marsha Botanica" class="notify-logo"/>
+      <p class="eyebrow reveal">The Nūr Collection</p>
+      <h2 class="sec-title reveal d1">Be the first to experience<br><em>something different.</em></h2>
+      <p class="sec-body reveal d2">We're in final development. When the collection launches, you'll know before anyone else. One email. No noise.</p>
+      <div class="form-wrap notify-form reveal d3" style="margin:32px auto 0">
+        <form class="form-row" id="notify-form" onsubmit="captureEmail(event,'notify-form','notify-ok')">
+          <input class="form-input" type="email" placeholder="Your email address" required/>
+          <button class="form-btn" type="submit">Join the List</button>
+        </form>
+        <div class="form-success" id="notify-ok"><p>You're on the list. We'll be in touch.</p></div>
+        <p class="form-note">MarshaBotanica.com — launching 2026</p>
+      </div>`;
+  }
+
+  // FOOTER LINKS
+  document.getElementById('footer-links').innerHTML = `
+    <a href="mailto:hello@marshbotanica.com">Contact</a>
+    <a href="#">Privacy</a>
+    <a href="#">Instagram</a>`;
+
+  // SCROLL REVEAL
+  const io = new IntersectionObserver(
+    entries => entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('in'); }),
+    { threshold: 0.1 }
+  );
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+})();
+
+async function captureEmail(e, formId, successId){
+  e.preventDefault();
+  const form = document.getElementById(formId);
+  const success = document.getElementById(successId);
+  const email = form.querySelector('input[type=email]').value;
+  try {
+    const res = await fetch(`${SITE.supabaseUrl}/rest/v1/waitlist`,{
+      method:'POST',
+      headers:{'Content-Type':'application/json','apikey':SITE.supabaseAnonKey,'Authorization':`Bearer ${SITE.supabaseAnonKey}`,'Prefer':'return=minimal'},
+      body:JSON.stringify({email,source:'website'})
+    });
+    if(res.ok || res.status===409){ form.style.display='none'; success.style.display='block'; }
+    else throw new Error(res.status);
+  } catch(err){
+    form.style.display='none'; success.style.display='block';
+  }
+}
+</script>
+</body>
+</html>
