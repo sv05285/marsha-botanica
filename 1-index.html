@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Marsha Botanica</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500;1,600&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet"/>
+
+<script>
+// ╔══════════════════════════════════════════════════════════════╗
+// ║   🌿  MARSHA BOTANICA — LAUNCH CONTROL PANEL                ║
+// ║                                                              ║
+// ║   Change false → true to turn each feature ON.              ║
+// ║   Save the file and push to GitHub. That's it.              ║
+// ╚══════════════════════════════════════════════════════════════╝
+
+const SITE = {
+
+  // ── PAGE ─────────────────────────────────────────────────────
+  pageTitle:            "Marsha Botanica — Coming Soon",
+
+  // ── ANNOUNCEMENT BAR (thin strip at top of page) ─────────────
+  announcementBar:       true,
+  announcementText:      "The Nūr Collection — Coming Soon · MarshaBotanica.com",
+  //  At launch change to e.g.:
+  //  "Now Available — Free shipping on first orders · Shop the Nūr Collection"
+
+  // ── SHOP MODE ─────────────────────────────────────────────────
+  //  false = waitlist / pre-launch mode
+  //  true  = store is open, show Shop Now everywhere
+  shopLive:              false,
+  shopUrl:               "https://marshbotanica.myshopify.com",
+
+  // ── HERO CALL-TO-ACTION ───────────────────────────────────────
+  //  false = email signup form in hero
+  //  true  = "Shop the Collection" button (only shown when shopLive = true)
+  heroShopButton:        false,
+
+  // ── NAV LINKS (show/hide each nav item) ──────────────────────
+  navShowCollection:     true,
+  navShowAbout:          false,   // turn on when About page is ready
+  navShowGallery:        false,   // turn on when gallery is ready
+  navShowStockist:       false,   // turn on when stockist info is ready
+
+  // ── SECTIONS ─────────────────────────────────────────────────
+  showStory:             true,    // Brand philosophy + pillars
+  showKits:              true,    // The 3 Nūr Collection kits
+  showMSM:               false,   // hidden — not disclosed publicly
+  showGallery:           false,   // Photo gallery
+  showAbout:             false,   // Founder / about section
+  showStockist:          false,   // Where to buy / stockist list
+  showEmailCapture:      true,    // Waitlist signup (bottom of page)
+
+  // ── KIT PRICING & CART ───────────────────────────────────────
+  //  false = kits show product list only (pre-launch)
+  //  true  = kits show price and Add to Cart button
+  showKitPrices:         false,
+  showAddToCart:         false,
+  kitPrices: {
+    renewal:   "$68",
+    seaglow:   "$68",
+    goodlook:  "$68",
+  },
+  kitShopUrls: {
+    renewal:   "#",   // paste Shopify product URL at launch
+    seaglow:   "#",
+    goodlook:  "#",
+  },
+
+  // ── EMAIL CAPTURE → SUPABASE ──────────────────────────────────
+  supabaseUrl:           "https://ixvvidyjyajejjfaaajd.supabase.co",
+  supabaseAnonKey:       "YOUR_SUPABASE_ANON_KEY",
+  // Get anon key from: Supabase → Settings → API → anon public
+
+  // ── SOCIAL LINKS ─────────────────────────────────────────────
+  instagramUrl:          "#",     // paste Instagram URL when ready
+  showInstagram:         false,
+
+};
+
+// ╔══════════════════════════════════════════════════════════════╗
+// ║   END OF CONTROL PANEL — do not edit below this line        ║
+// ╚══════════════════════════════════════════════════════════════╝
+</script>
+
+<style>
+:root {
+  --ivory:     #fdf8ef;
+  --cream:     #f5ede0;
+  --parchment: #f0e8d5;
+  --forest:    #1a3d28;
+  --forest-2:  #254d34;
+  --gold:      #b8912a;
+  --gold-2:    #cda94a;
+  --gold-pale: #e5cf90;
+  --text:      #1c180f;
+  --text-2:    #3d3524;
+  --text-3:    #7a6e52;
+  --border:    #d5c9a8;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--ivory);color:var(--text);font-family:'EB Garamond',serif;overflow-x:hidden;}
+
+/* ── ANNOUNCEMENT BAR ── */
+#ann-bar{background:var(--forest);text-align:center;padding:10px 24px;
+  font-family:'DM Mono',monospace;font-size:0.54rem;letter-spacing:0.28em;
+  text-transform:uppercase;color:var(--gold-pale);}
+
+/* ── NAV ── */
+nav{position:sticky;top:0;z-index:100;padding:18px 40px;
+  display:flex;align-items:center;justify-content:space-between;
+  background:rgba(253,248,239,0.94);backdrop-filter:blur(12px);
+  border-bottom:1px solid rgba(213,201,168,0.4);}
+.nav-brand{font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:400;
+  color:var(--forest);letter-spacing:0.06em;display:flex;align-items:center;
+  gap:10px;text-decoration:none;}
+.nav-right{display:flex;align-items:center;gap:24px;}
+.nav-link{font-family:'DM Mono',monospace;font-size:0.54rem;letter-spacing:0.22em;
+  text-transform:uppercase;color:var(--text-3);text-decoration:none;transition:color 0.2s;}
+.nav-link:hover{color:var(--forest);}
+.nav-cta{font-family:'DM Mono',monospace;font-size:0.54rem;letter-spacing:0.18em;
+  text-transform:uppercase;background:var(--forest);color:var(--gold-pale);
+  border:none;padding:10px 20px;border-radius:2px;cursor:pointer;
+  text-decoration:none;transition:background 0.2s;}
+.nav-cta:hover{background:var(--forest-2);}
+
+/* ── HERO ── */
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;padding:100px 24px 80px;position:relative;overflow:hidden;
+  background:
+    radial-gradient(ellipse 140% 70% at 50% -10%,rgba(26,61,40,0.06) 0%,transparent 55%),
+    radial-gradient(ellipse 60% 50% at 5% 60%,rgba(184,145,42,0.05) 0%,transparent 50%),
+    var(--ivory);}
+.hero-arch{position:absolute;top:0;left:50%;transform:translateX(-50%);
+  width:min(700px,90vw);height:300px;border:1px solid rgba(213,201,168,0.3);
+  border-top:none;border-radius:0 0 50% 50%;pointer-events:none;}
+.hero-arch::before{content:'';position:absolute;top:14px;left:14px;right:14px;bottom:-1px;
+  border:1px solid rgba(229,207,144,0.15);border-top:none;border-radius:0 0 50% 50%;}
+.hero-inner{position:relative;z-index:2;display:flex;flex-direction:column;
+  align-items:center;max-width:720px;width:100%;text-align:center;}
+.moon-badge{width:54px;height:54px;border:1px solid var(--gold-pale);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;margin-bottom:26px;
+  background:radial-gradient(circle,rgba(229,207,144,0.1),transparent);}
+.moon-badge svg{width:22px;height:22px;}
+.eyebrow{font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:0.35em;
+  color:var(--gold);text-transform:uppercase;margin-bottom:18px;}
+.hero-name{font-family:'Cormorant Garamond',serif;font-size:clamp(4rem,11vw,8.5rem);
+  font-weight:300;line-height:0.9;color:var(--forest);margin-bottom:8px;}
+.hero-name em{font-style:italic;color:var(--forest-2);}
+.hero-sub{font-family:'DM Mono',monospace;font-size:0.56rem;letter-spacing:0.44em;
+  color:var(--gold-2);text-transform:uppercase;margin-bottom:34px;}
+.rule{width:100%;max-width:460px;display:flex;align-items:center;gap:12px;margin:0 auto 34px;}
+.rule-line{flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--gold-pale),transparent);}
+.rule-gem{width:5px;height:5px;background:var(--gold-2);transform:rotate(45deg);flex-shrink:0;}
+.rule-label{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.28em;
+  color:var(--gold);text-transform:uppercase;white-space:nowrap;}
+.hero-tagline{font-family:'Cormorant Garamond',serif;font-size:clamp(1.3rem,3.2vw,1.9rem);
+  font-weight:400;font-style:italic;color:var(--text-2);line-height:1.45;
+  max-width:500px;margin-bottom:14px;}
+.hero-desc{font-size:1.05rem;color:var(--text-3);line-height:1.8;
+  max-width:440px;margin-bottom:46px;}
+
+/* ── EMAIL FORM ── */
+.form-wrap{width:100%;max-width:500px;margin-bottom:16px;}
+.form-row{display:flex;border:1.5px solid var(--border);border-radius:3px;overflow:hidden;
+  background:white;box-shadow:0 6px 30px rgba(26,61,40,0.07),0 1px 4px rgba(0,0,0,0.04);}
+.form-input{flex:1;border:none;outline:none;padding:16px 20px;
+  font-family:'EB Garamond',serif;font-size:1.05rem;color:var(--text);background:transparent;}
+.form-input::placeholder{color:var(--text-3);font-style:italic;}
+.form-btn{background:var(--forest);border:none;padding:16px 26px;
+  font-family:'DM Mono',monospace;font-size:0.54rem;letter-spacing:0.18em;
+  text-transform:uppercase;color:var(--gold-pale);cursor:pointer;
+  transition:background 0.2s;white-space:nowrap;}
+.form-btn:hover{background:var(--forest-2);}
+.form-note{font-size:0.73rem;color:var(--text-3);font-style:italic;text-align:center;margin-top:12px;}
+.form-success{display:none;padding:18px;border-radius:3px;text-align:center;
+  border:1px solid rgba(26,61,40,0.15);background:rgba(26,61,40,0.04);}
+.form-success p{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-style:italic;color:var(--forest);}
+
+/* ── SHOP BUTTON ── */
+.shop-btn{display:inline-block;background:var(--forest);color:var(--gold-pale);
+  font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.2em;
+  text-transform:uppercase;padding:18px 44px;border-radius:2px;text-decoration:none;
+  transition:background 0.2s;border:none;cursor:pointer;margin-bottom:14px;}
+.shop-btn:hover{background:var(--forest-2);}
+.shop-btn-ghost{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.18em;
+  text-transform:uppercase;color:var(--text-3);text-decoration:none;
+  border-bottom:1px solid var(--border);padding-bottom:2px;display:inline-block;
+  margin-top:8px;transition:color 0.2s;}
+.shop-btn-ghost:hover{color:var(--forest);}
+
+.hero-scroll{position:absolute;bottom:26px;left:50%;transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+  opacity:0.4;animation:bob 2.8s ease-in-out infinite;}
+.hero-scroll span{font-family:'DM Mono',monospace;font-size:0.44rem;letter-spacing:0.2em;
+  color:var(--text-3);text-transform:uppercase;}
+.scroll-line{width:1px;height:28px;background:linear-gradient(var(--gold),transparent);}
+@keyframes bob{0%,100%{opacity:0.35;transform:translateX(-50%) translateY(0);}
+  50%{opacity:0.55;transform:translateX(-50%) translateY(5px);}}
+
+/* ── SHARED ── */
+.wrap{max-width:1080px;margin:0 auto;padding:100px 40px;}
+.sec-head{text-align:center;margin-bottom:60px;}
+.sec-head .eyebrow{margin-bottom:14px;}
+.sec-title{font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,5vw,3.1rem);
+  font-weight:300;color:var(--forest);line-height:1.1;}
+.sec-title em{font-style:italic;}
+.sec-body{font-size:1.05rem;color:var(--text-3);line-height:1.85;
+  max-width:520px;margin:14px auto 0;}
+
+/* ── STORY ── */
+.story-section{background:linear-gradient(180deg,var(--ivory),var(--cream));position:relative;}
+.story-section::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--gold-pale),transparent);}
+.story-grid{display:grid;grid-template-columns:1fr 1fr;gap:70px;align-items:center;}
+.story-copy{display:flex;flex-direction:column;gap:20px;}
+.story-pull{font-family:'Cormorant Garamond',serif;font-size:clamp(1.3rem,2.6vw,1.7rem);
+  font-weight:400;font-style:italic;color:var(--forest);line-height:1.45;
+  border-left:2px solid var(--gold-pale);padding-left:22px;}
+.story-p{font-size:1rem;color:var(--text-2);line-height:1.9;}
+.story-p strong{color:var(--forest);font-weight:500;}
+.story-img-wrap{position:relative;}
+.story-img-frame{border-radius:3px;overflow:hidden;border:1px solid var(--border);
+  box-shadow:0 12px 50px rgba(26,61,40,0.1),0 2px 8px rgba(0,0,0,0.06);}
+.story-img-frame img{width:100%;height:450px;object-fit:cover;object-position:center top;display:block;}
+.story-img-cap{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.18em;
+  color:var(--text-3);text-transform:uppercase;text-align:right;margin-top:9px;}
+.story-img-wrap::before{content:'';position:absolute;top:-10px;right:-10px;
+  width:56px;height:56px;border-top:1.5px solid var(--gold-pale);
+  border-right:1.5px solid var(--gold-pale);pointer-events:none;}
+.story-img-wrap::after{content:'';position:absolute;bottom:-10px;left:-10px;
+  width:56px;height:56px;border-bottom:1.5px solid var(--gold-pale);
+  border-left:1.5px solid var(--gold-pale);pointer-events:none;}
+.pillars{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--border);margin-top:60px;}
+.pillar{padding:34px 28px;border-right:1px solid var(--border);background:var(--ivory);transition:background 0.2s;}
+.pillar:last-child{border-right:none;}
+.pillar:hover{background:rgba(26,61,40,0.025);}
+.p-num{font-family:'Cormorant Garamond',serif;font-size:2.6rem;font-weight:300;
+  color:var(--gold-pale);line-height:1;margin-bottom:12px;}
+.p-title{font-family:'Cormorant Garamond',serif;font-size:1.12rem;font-weight:500;
+  color:var(--forest);margin-bottom:7px;}
+.p-text{font-size:0.9rem;color:var(--text-3);line-height:1.72;}
+
+/* ── KITS ── */
+.kits-section{background:var(--forest);position:relative;overflow:hidden;}
+.kits-section::before{content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 80% 60% at 20% 30%,rgba(184,145,42,0.07) 0%,transparent 55%),
+             radial-gradient(ellipse 70% 50% at 80% 70%,rgba(30,92,94,0.09) 0%,transparent 55%);}
+.kits-wrap{max-width:1080px;margin:0 auto;padding:100px 40px;position:relative;z-index:1;}
+.kits-section .sec-title{color:var(--cream);}
+.kits-section .sec-body{color:rgba(245,237,224,0.6);}
+.kits-section .eyebrow{color:var(--gold-pale);}
+.kits-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;
+  background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.07);margin-top:16px;}
+.kit{padding:42px 30px;background:rgba(12,28,18,0.55);display:flex;flex-direction:column;
+  gap:16px;position:relative;overflow:hidden;transition:background 0.25s;}
+.kit:hover{background:rgba(18,38,24,0.75);}
+.kit-topbar{position:absolute;top:0;left:0;right:0;height:2px;}
+.kit.renewal .kit-topbar{background:linear-gradient(90deg,transparent,#cda94a,transparent);}
+.kit.seaglow  .kit-topbar{background:linear-gradient(90deg,transparent,#5fb8ba,transparent);}
+.kit.goodlook .kit-topbar{background:linear-gradient(90deg,transparent,#7ec47e,transparent);}
+.kit-badge{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.28em;
+  text-transform:uppercase;padding:4px 10px;border-radius:20px;align-self:flex-start;}
+.kit.renewal .kit-badge{background:rgba(205,169,74,0.12);color:#d4aa4a;border:1px solid rgba(205,169,74,0.22);}
+.kit.seaglow  .kit-badge{background:rgba(95,184,186,0.12);color:#7ecece;border:1px solid rgba(95,184,186,0.22);}
+.kit.goodlook .kit-badge{background:rgba(126,196,126,0.12);color:#9dd49d;border:1px solid rgba(126,196,126,0.22);}
+.kit-name{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:400;
+  font-style:italic;color:var(--cream);line-height:1;}
+.kit-tagline{font-size:0.9rem;color:rgba(245,237,224,0.5);font-style:italic;line-height:1.5;}
+.kit-products{display:flex;flex-direction:column;margin-top:4px;}
+.kit-product{display:flex;align-items:flex-start;gap:11px;
+  padding:11px 0;border-bottom:1px solid rgba(255,255,255,0.06);}
+.kit-product:last-child{border-bottom:none;}
+.kp-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0;margin-top:7px;}
+.kit.renewal .kp-dot{background:#d4aa4a;}
+.kit.seaglow  .kp-dot{background:#7ecece;}
+.kit.goodlook .kp-dot{background:#9dd49d;}
+.kp-name{font-family:'Cormorant Garamond',serif;font-size:0.98rem;color:var(--cream);}
+.kp-type{font-family:'DM Mono',monospace;font-size:0.48rem;letter-spacing:0.14em;
+  text-transform:uppercase;color:rgba(245,237,224,0.32);margin-top:2px;}
+.kit-price-tag{font-family:'Cormorant Garamond',serif;font-size:1.5rem;
+  color:var(--gold-pale);margin-top:6px;}
+.kit-cart-btn{display:block;text-align:center;padding:13px;margin-top:6px;border-radius:2px;
+  font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.18em;
+  text-transform:uppercase;text-decoration:none;transition:opacity 0.2s;border:none;cursor:pointer;}
+.kit.renewal .kit-cart-btn{background:#cda94a;color:var(--forest);}
+.kit.seaglow  .kit-cart-btn{background:#5fb8ba;color:var(--forest);}
+.kit.goodlook .kit-cart-btn{background:#7ec47e;color:var(--forest);}
+.kit-cart-btn:hover{opacity:0.85;}
+.kit-photo{margin-top:10px;border-radius:2px;overflow:hidden;border:1px solid rgba(255,255,255,0.07);}
+.kit-photo img{width:100%;height:185px;object-fit:cover;object-position:center 25%;display:block;
+  filter:brightness(0.88) saturate(0.92);transition:transform 0.4s,filter 0.3s;}
+.kit:hover .kit-photo img{transform:scale(1.04);filter:brightness(0.96) saturate(1.02);}
+
+/* ── MSM ── */
+.msm-section{background:var(--parchment);position:relative;}
+.msm-section::before,.msm-section::after{content:'';position:absolute;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--gold-pale),transparent);}
+.msm-section::before{top:0;}.msm-section::after{bottom:0;}
+.msm-grid{display:grid;grid-template-columns:1fr 1.5fr;gap:70px;align-items:start;}
+.msm-stats{display:flex;flex-direction:column;gap:1px;}
+.stat-card{background:var(--ivory);border:1px solid var(--border);padding:24px 26px;transition:border-color 0.2s;}
+.stat-card:hover{border-color:var(--gold-pale);}
+.stat-label{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.22em;
+  text-transform:uppercase;color:var(--gold);margin-bottom:5px;}
+.stat-val{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:500;
+  color:var(--forest);margin-bottom:4px;}
+.stat-note{font-size:0.87rem;color:var(--text-3);line-height:1.65;}
+.msm-copy{display:flex;flex-direction:column;gap:18px;}
+.msm-title{font-family:'Cormorant Garamond',serif;font-size:clamp(1.8rem,3.8vw,2.6rem);
+  font-weight:300;color:var(--forest);line-height:1.15;}
+.msm-title em{font-style:italic;}
+.msm-p{font-size:1rem;color:var(--text-2);line-height:1.9;}
+.msm-note{font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.12em;color:var(--gold);
+  line-height:1.7;border-left:2px solid var(--gold-pale);padding:10px 16px;
+  background:rgba(184,145,42,0.03);}
+
+/* ── GALLERY ── */
+.gallery-section{background:var(--cream);position:relative;}
+.gallery-section::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--gold-pale),transparent);}
+.gallery-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;margin-top:48px;}
+.gallery-cell{overflow:hidden;border-radius:2px;aspect-ratio:1;}
+.gallery-cell img{width:100%;height:100%;object-fit:cover;transition:transform 0.4s;}
+.gallery-cell:hover img{transform:scale(1.04);}
+.gallery-placeholder{background:rgba(26,61,40,0.04);border:1px dashed var(--border);
+  display:flex;align-items:center;justify-content:center;aspect-ratio:1;border-radius:2px;}
+.gallery-placeholder span{font-family:'DM Mono',monospace;font-size:0.5rem;
+  letter-spacing:0.18em;text-transform:uppercase;color:var(--text-3);}
+
+/* ── ABOUT (placeholder) ── */
+.about-section{background:var(--ivory);position:relative;}
+.about-section::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--gold-pale),transparent);}
+
+/* ── STOCKIST (placeholder) ── */
+.stockist-section{background:var(--cream);position:relative;}
+
+/* ── NOTIFY / BOTTOM CTA ── */
+.notify-section{background:var(--forest);text-align:center;position:relative;overflow:hidden;}
+.notify-section::before{content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 100% 80% at 50% 50%,rgba(184,145,42,0.06) 0%,transparent 70%);}
+.notify-inner{max-width:580px;margin:0 auto;padding:100px 24px;position:relative;z-index:1;}
+.notify-section .sec-title{color:var(--cream);}
+.notify-section .sec-body{color:rgba(245,237,224,0.6);}
+.notify-section .eyebrow{color:var(--gold-pale);}
+.notify-form .form-row{border-color:rgba(255,255,255,0.12);background:rgba(255,255,255,0.05);}
+.notify-form .form-input{color:var(--cream);}
+.notify-form .form-input::placeholder{color:rgba(245,237,224,0.35);}
+.notify-form .form-btn{background:var(--gold);color:var(--forest);}
+.notify-form .form-btn:hover{background:var(--gold-2);}
+.notify-form .form-note{color:rgba(245,237,224,0.3);}
+.notify-form .form-success{border-color:rgba(205,169,74,0.3);background:rgba(205,169,74,0.08);}
+.notify-form .form-success p{color:var(--gold-pale);}
+
+/* ── FOOTER ── */
+footer{background:#0d1910;padding:48px 40px;}
+.footer-inner{max-width:1080px;margin:0 auto;display:flex;align-items:center;
+  justify-content:space-between;flex-wrap:wrap;gap:20px;}
+.footer-brand-name{font-family:'Cormorant Garamond',serif;font-size:1.15rem;font-weight:300;
+  color:rgba(245,237,224,0.38);letter-spacing:0.08em;}
+.footer-brand-sub{font-family:'DM Mono',monospace;font-size:0.46rem;letter-spacing:0.3em;
+  text-transform:uppercase;color:rgba(184,145,42,0.38);margin-top:4px;}
+.footer-links{display:flex;gap:22px;flex-wrap:wrap;}
+.footer-links a{font-family:'DM Mono',monospace;font-size:0.5rem;letter-spacing:0.18em;
+  text-transform:uppercase;color:rgba(245,237,224,0.22);text-decoration:none;transition:color 0.2s;}
+.footer-links a:hover{color:var(--gold-pale);}
+.footer-copy{font-family:'DM Mono',monospace;font-size:0.48rem;
+  color:rgba(245,237,224,0.16);letter-spacing:0.1em;}
+
+/* ── ANIMATION ── */
+.reveal{opacity:0;transform:translateY(20px);transition:opacity 0.72s ease,transform 0.72s ease;}
+.reveal.in{opacity:1;transform:translateY(0);}
+.reveal.d1{transition-delay:0.1s;}.reveal.d2{transition-delay:0.21s;}
+.reveal.d3{transition-delay:0.32s;}.reveal.d4{transition-delay:0.43s;}
+
+/* ── RESPONSIVE ── */
+@media(max-width:820px){
+  nav{padding:14px 18px;}
+  .wrap,.kits-wrap{padding:68px 18px;}
+  .story-grid,.msm-grid{grid-template-columns:1fr;gap:40px;}
+  .story-img-wrap{display:none;}
+  .kits-grid,.pillars,.gallery-grid{grid-template-columns:1fr;}
+  .pillar{border-right:none;border-bottom:1px solid var(--border);}
+  .pillar:last-child{border-bottom:none;}
+  .footer-inner{flex-direction:column;align-items:flex-start;}
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════ ANNOUNCEMENT BAR ══ -->
+<div id="ann-bar"></div>
+
+<!-- ══════════════════════════════════════ NAV ══ -->
+<nav>
+  <a href="#" class="nav-brand">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" stroke="#b8912a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <em style="font-style:italic">Marsha</em>&nbsp;Botanica
+  </a>
+  <div class="nav-right" id="nav-right"></div>
+</nav>
+
+<!-- ══════════════════════════════════════ HERO ══ -->
+<section class="hero">
+  <div class="hero-arch"></div>
+  <div class="hero-inner">
+    <div class="moon-badge">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" stroke="#b8912a" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    <p class="eyebrow">The Nūr Collection</p>
+    <h1 class="hero-name"><em>Marsha</em><br>Botanica</h1>
+    <p class="hero-sub">· Botanical Luxury · Handcrafted ·</p>
+    <div class="rule">
+      <div class="rule-line"></div>
+      <div class="rule-gem"></div>
+      <span class="rule-label" id="hero-badge"></span>
+      <div class="rule-gem"></div>
+      <div class="rule-line"></div>
+    </div>
+    <p class="hero-tagline">Quiet luxury you can see, feel, and repeat.</p>
+    <p class="hero-desc">Three signature cleansing bars. Six precision treatments. One complete system — crafted from the botanical world for modern skin.</p>
+    <div id="hero-cta"></div>
+  </div>
+  <div class="hero-scroll">
+    <span>Discover</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════ STORY ══ -->
+<section class="story-section" id="story-section">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="eyebrow">The Philosophy</p>
+      <h2 class="sec-title">Born from the botanical world.<br><em>Built for modern skin.</em></h2>
+      <p class="sec-body">A precision cleansing system — not a collection of soaps. Every element is engineered, tested, and made to be repeated with exactness.</p>
+    </div>
+    <div class="story-grid">
+      <div class="story-copy reveal d1">
+        <p class="story-pull">"The system is built so scaling is replication, not reinvention."</p>
+        <p class="story-p">Marsha Botanica is a <strong>luxury-performance cleansing system</strong> — three signature bars paired with six targeted treatments, assembled into three curated kits for three distinct skin intentions.</p>
+        <p class="story-p">Every bar is prepared in small batches using a controlled process with premium botanical ingredients. Precise formulations. Documented by round.</p>
+        <p class="story-p">The brand world is Mediterranean and intentional — warm stone, salt air, citrus bloom, sea mineral. The kind of luxury that doesn't announce itself.</p>
+      </div>
+      <div class="story-img-wrap reveal d2">
+        <div class="story-img-frame">
+          <img src="img-display-all.png" alt="The Nūr Collection — Marsha Botanica"/>
+        </div>
+        <p class="story-img-cap">The Nūr Collection — Renewal · SeaGlow · GoodLook</p>
+      </div>
+    </div>
+    <div class="pillars reveal d1">
+      <div class="pillar">
+        <div class="p-num">01</div>
+        <div class="p-title">Performance Formulated</div>
+        <p class="p-text">Each bar is built around a proprietary blend of active ingredients — carefully selected, precisely dosed, and consistent across every batch.</p>
+      </div>
+      <div class="pillar">
+        <div class="p-num">02</div>
+        <div class="p-title">Botanical Infused</div>
+        <p class="p-text">Each bar is made with premium botanical ingredients prepared using a controlled small-batch process. Quality-first from raw material to finished bar.</p>
+      </div>
+      <div class="pillar">
+        <div class="p-num">03</div>
+        <div class="p-title">System Built</div>
+        <p class="p-text">Three kits. Nine products. One architecture. Each component designed to work together as a complete, repeatable regimen.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════ KITS ══ -->
+<section class="kits-section" id="kits-section">
+  <div class="kits-wrap">
+    <div class="sec-head reveal">
+      <p class="eyebrow">The Nūr Collection</p>
+      <h2 class="sec-title">Three kits. <em>Three skin intentions.</em></h2>
+      <p class="sec-body">Each kit pairs one signature cleansing bar with two precision treatment products. Curated, not assembled.</p>
+    </div>
+    <div class="kits-grid">
+
+      <div class="kit renewal reveal d1">
+        <div class="kit-topbar"></div>
+        <span class="kit-badge">Kit 01</span>
+        <div class="kit-name">Renewal</div>
+        <div class="kit-tagline">Revitalizing daily cleanse + restorative treatments. Floral-citrus elegance, face-first.</div>
+        <div class="kit-products">
+          <div class="kit-product"><div class="kp-dot"></div><div><div class="kp-name">Neroli Bar — <em style="color:var(--gold-pale);font-size:0.85em">Top Secret</em></div><div class="kp-type">Handcrafted · Coming Soon</div></div></div>
+          <div class="kit-product"><div class="kp-dot"></div><div><div class="kp-name">Barrier Veil</div><div class="kp-type">Treatment · Protective</div></div></div>
+          <div class="kit-product"><div class="kp-dot"></div><div><div class="kp-name">Elixir Layla</div><div class="kp-type">Treatment · Restorative</div></div></div>
+        </div>
+        <div id="commerce-renewal"></div>
+        <div class="kit-photo"><img src="img-renewal.png" alt="Renewal Kit"/></div>
+      </div>
+
+      <div class="kit seaglow reveal d2">
+        <div class="kit-topbar"></div>
+        <span class="kit-badge">Kit 03</span>
+        <div class="kit-name">SeaGlow</div>
+        <div class="kit-tagline">Polished mineral finish. Sea-mineral intelligence and quiet luminous radiance.</div>
+        <div class="kit-products">
+          <div class="kit-product"><div class="kp-dot"></div><div><div class="kp-name">Halo Bar — <em style="color:#7ecece;font-size:0.85em">Top Secret</em></div><div class="kp-type">Handcrafted · Coming Soon</div></div></div>
+          <div class="kit-product"><div class="kp-dot"></div><div><div class="kp-name">Kelp Coat</div><div class="kp-type">Treatment · Protective</div></div></div>
+          <div class="kit-product"><div class="kp-dot"></div><div><div class="kp-name">Essentia Azure</div><div class="kp-type">Treatment · Brightening</div></div></div>
+        </div>
+        <div id="commerce-seaglow"></div>
+        <div class="kit-photo"><img src="img-seaglow.png" alt="SeaGlow Kit"/></div>
+      </div>
+
+      <div class="kit goodlook reveal d3">
+        <div class="kit-topbar"></div>
+        <span class="kit-badge">Kit 02</span>
+        <div class="kit-name">GoodLook</div>
+        <div class="kit-tagline">Purify · Balance · Restore. Clarifying mineral texture for face and body.</div>
+        <div class="kit-products">
+          <div class="kit-product"><div class="kp-dot"></div><div><div class="kp-name">Rhassoul Bar — <em style="color:#9dd49d;font-size:0.85em">Top Secret</em></div><div class="kp-type">Handcrafted · Coming Soon</div></div></div>
+          <div class="kit-product"><div class="kp-dot"></div><div><div class="kp-name">Calm Dew</div><div class="kp-type">Treatment · Clarifying</div></div></div>
+          <div class="kit-product"><div class="kp-dot"></div><div><div class="kp-name">Canopy Complex</div><div class="kp-type">Treatment · Overnight Repair</div></div></div>
+        </div>
+        <div id="commerce-goodlook"></div>
+        <div class="kit-photo"><img src="img-goodlook.png" alt="GoodLook Kit"/></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ingredient section — unlocks at launch -->
+
+<!-- ══════════════════════════════════ GALLERY ══ -->
+<section class="gallery-section" id="gallery-section">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="eyebrow">The Collection</p>
+      <h2 class="sec-title">Crafted with <em>intention.</em></h2>
+    </div>
+    <div class="gallery-grid" id="gallery-grid"></div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════ ABOUT ══ -->
+<section class="about-section" id="about-section">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="eyebrow">The Founder</p>
+      <h2 class="sec-title">About <em>Marsha Botanica.</em></h2>
+      <p class="sec-body">Coming soon.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════ STOCKIST ══ -->
+<section class="stockist-section" id="stockist-section">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="eyebrow">Where to Find Us</p>
+      <h2 class="sec-title">Stockists &amp; <em>Partners.</em></h2>
+      <p class="sec-body">Coming soon.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════ NOTIFY ══ -->
+<section class="notify-section" id="notify-section">
+  <div class="notify-inner" id="notify-inner"></div>
+</section>
+
+<!-- ══════════════════════════════════ FOOTER ══ -->
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="footer-brand-name"><em>Marsha</em> Botanica</div>
+      <div class="footer-brand-sub">· The Nūr Collection ·</div>
+    </div>
+    <div class="footer-links" id="footer-links"></div>
+    <p class="footer-copy">© 2026 Marsha Botanica. All rights reserved.</p>
+  </div>
+</footer>
+
+<script>
+(function() {
+
+  // ── PAGE TITLE
+  document.title = SITE.pageTitle;
+
+  // ── ANNOUNCEMENT BAR
+  const bar = document.getElementById('ann-bar');
+  bar.style.display = SITE.announcementBar ? 'block' : 'none';
+  if (SITE.announcementBar) bar.textContent = SITE.announcementText;
+
+  // ── HERO BADGE
+  document.getElementById('hero-badge').textContent =
+    SITE.shopLive ? 'Now Available' : 'Coming Soon';
+
+  // ── NAV
+  let nav = '';
+  if (SITE.navShowCollection) nav += `<a href="#kits-section" class="nav-link">The Collection</a>`;
+  if (SITE.navShowAbout)      nav += `<a href="#about-section" class="nav-link">About</a>`;
+  if (SITE.navShowGallery)    nav += `<a href="#gallery-section" class="nav-link">Gallery</a>`;
+  if (SITE.navShowStockist)   nav += `<a href="#stockist-section" class="nav-link">Stockist</a>`;
+  nav += SITE.shopLive
+    ? `<a href="${SITE.shopUrl}" class="nav-cta">Shop Now</a>`
+    : `<a href="#notify-section" class="nav-cta">Join the List</a>`;
+  document.getElementById('nav-right').innerHTML = nav;
+
+  // ── HERO CTA
+  const heroCTA = document.getElementById('hero-cta');
+  if (SITE.shopLive && SITE.heroShopButton) {
+    heroCTA.innerHTML = `
+      <a href="${SITE.shopUrl}" class="shop-btn">Shop the Collection</a><br>
+      <a href="#story-section" class="shop-btn-ghost">Learn more</a>`;
+  } else if (SITE.showEmailCapture) {
+    heroCTA.innerHTML = `
+      <div class="form-wrap">
+        <form class="form-row" id="hero-form" onsubmit="captureEmail(event,'hero-form','hero-ok')">
+          <input class="form-input" type="email" placeholder="Your email address" required/>
+          <button class="form-btn" type="submit">Notify Me</button>
+        </form>
+        <div class="form-success" id="hero-ok"><p>You're on the list. We'll be in touch.</p></div>
+        <p class="form-note">Be first to know when we launch. No noise.</p>
+      </div>`;
+  }
+
+  // ── SECTIONS visibility
+  const show = (id, visible) => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = visible ? '' : 'none';
+  };
+  show('story-section',    SITE.showStory);
+  show('kits-section',     SITE.showKits);
+  show('msm-section',      SITE.showMSM);
+  show('gallery-section',  SITE.showGallery);
+  show('about-section',    SITE.showAbout);
+  show('stockist-section', SITE.showStockist);
+  show('notify-section',   SITE.showEmailCapture || SITE.shopLive);
+
+  // ── KIT COMMERCE (prices + cart buttons)
+  [
+    { key: 'renewal',  label: 'Renewal'  },
+    { key: 'seaglow',  label: 'SeaGlow'  },
+    { key: 'goodlook', label: 'GoodLook' },
+  ].forEach(({ key }) => {
+    const el = document.getElementById(`commerce-${key}`);
+    if (!el) return;
+    let html = '';
+    if (SITE.showKitPrices)
+      html += `<div class="kit-price-tag">${SITE.kitPrices[key]}</div>`;
+    if (SITE.showAddToCart && SITE.shopLive)
+      html += `<a href="${SITE.kitShopUrls[key]}" class="kit-cart-btn">Add to Cart</a>`;
+    el.innerHTML = html;
+  });
+
+  // ── GALLERY
+  if (SITE.showGallery) {
+    const imgs = [
+      { src: 'img-renewal.png',     alt: 'Renewal Kit' },
+      { src: 'img-seaglow.png',     alt: 'SeaGlow Kit' },
+      { src: 'img-goodlook.png',    alt: 'GoodLook Kit' },
+      { src: 'img-display-all.png', alt: 'The Nūr Collection' },
+      null, null,
+    ];
+    document.getElementById('gallery-grid').innerHTML = imgs.map(img =>
+      img
+        ? `<div class="gallery-cell"><img src="${img.src}" alt="${img.alt}"/></div>`
+        : `<div class="gallery-placeholder"><span>Coming Soon</span></div>`
+    ).join('');
+  }
+
+  // ── BOTTOM NOTIFY / SHOP CTA
+  const notifyInner = document.getElementById('notify-inner');
+  if (notifyInner) {
+    const moonSVG = `<div class="moon-badge" style="margin:0 auto 26px;border-color:rgba(229,207,144,0.2);">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" stroke="#b8912a" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>`;
+
+    if (SITE.shopLive) {
+      notifyInner.innerHTML = `
+        ${moonSVG}
+        <p class="eyebrow reveal">The Nūr Collection</p>
+        <h2 class="sec-title reveal d1">The collection<br><em>is here.</em></h2>
+        <p class="sec-body reveal d2" style="margin-bottom:40px">Three signature bars. Six precision treatments. Three curated kits. Ready for you now.</p>
+        <a href="${SITE.shopUrl}" class="shop-btn reveal d3">Shop the Collection</a>`;
+    } else {
+      notifyInner.innerHTML = `
+        ${moonSVG}
+        <p class="eyebrow reveal">The Nūr Collection</p>
+        <h2 class="sec-title reveal d1">Be the first to experience<br><em>something different.</em></h2>
+        <p class="sec-body reveal d2">We're in final development. When the collection launches, you'll know before anyone else. One email. No noise.</p>
+        <div class="form-wrap notify-form reveal d3" style="margin:32px auto 0">
+          <form class="form-row" id="notify-form" onsubmit="captureEmail(event,'notify-form','notify-ok')">
+            <input class="form-input" type="email" placeholder="Your email address" required/>
+            <button class="form-btn" type="submit">Join the List</button>
+          </form>
+          <div class="form-success" id="notify-ok"><p>You're on the list. We'll be in touch.</p></div>
+          <p class="form-note">MarshaBotanica.com — launching 2026</p>
+        </div>`;
+    }
+  }
+
+  // ── FOOTER LINKS
+  let fl = `<a href="mailto:hello@marshbotanica.com">Contact</a>`;
+  if (SITE.navShowAbout)    fl += `<a href="#about-section">About</a>`;
+  if (SITE.navShowStockist) fl += `<a href="#stockist-section">Stockist</a>`;
+  if (SITE.showInstagram)   fl += `<a href="${SITE.instagramUrl}" target="_blank">Instagram</a>`;
+  fl += `<a href="#">Privacy</a>`;
+  document.getElementById('footer-links').innerHTML = fl;
+
+  // ── SCROLL REVEAL
+  const io = new IntersectionObserver(entries =>
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); }),
+    { threshold: 0.1 }
+  );
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+})();
+
+// ── EMAIL CAPTURE → SUPABASE waitlist table
+async function captureEmail(e, formId, successId) {
+  e.preventDefault();
+  const form    = document.getElementById(formId);
+  const success = document.getElementById(successId);
+  const email   = form.querySelector('input[type=email]').value;
+
+  try {
+    const res = await fetch(`${SITE.supabaseUrl}/rest/v1/waitlist`, {
+      method: 'POST',
+      headers: {
+        'Content-Type':  'application/json',
+        'apikey':        SITE.supabaseAnonKey,
+        'Authorization': `Bearer ${SITE.supabaseAnonKey}`,
+        'Prefer':        'return=minimal',
+      },
+      body: JSON.stringify({ email, source: 'website' }),
+    });
+    // 201 = saved  |  409 = duplicate (already on list) — both = success to user
+    if (res.ok || res.status === 409) {
+      form.style.display    = 'none';
+      success.style.display = 'block';
+    } else {
+      throw new Error(`HTTP ${res.status}`);
+    }
+  } catch (err) {
+    console.error('Email capture error:', err);
+    // Show success anyway — never leave user hanging
+    form.style.display    = 'none';
+    success.style.display = 'block';
+  }
+}
+</script>
+</body>
+</html>
